@@ -1,4 +1,4 @@
-use std::{vec};
+use std::vec;
 
 pub fn part_one(input: &str) -> Option<u32> {
     // Get the most frequent bits
@@ -18,7 +18,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         }
         first = false;
     }
-    
+
     // Turn "binary" vector of most frequent into a number
     let mut gamma: u32 = 0;
     let mut epsilon: u32 = 0;
@@ -36,7 +36,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 
         line_length -= 1;
         if line_length == 0 {
-            break;   
+            break;
         }
     }
     println!();
@@ -46,7 +46,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     return Some(gamma * epsilon);
 }
 
-pub fn search1(lines: &mut Vec<&str>) -> u32{
+pub fn search1(lines: &mut Vec<&str>) -> u32 {
     let mut begin = 0;
     let mut end = lines.len();
     let mut index = 0;
@@ -61,13 +61,15 @@ pub fn search1(lines: &mut Vec<&str>) -> u32{
         let most_common = middle.chars().nth(index).unwrap();
         println!("most common: {}", most_common);
         if most_common == '1' {
-            let first_most = lines[begin..end].iter()
+            let first_most = lines[begin..end]
+                .iter()
                 .find(|x| x.chars().nth(index).unwrap() == most_common)
                 .unwrap();
             println!("first most (moving beggining): {}", first_most);
             begin = lines.iter().position(|x| x == first_most).unwrap();
         } else {
-            let last_most = lines[begin..end].iter()
+            let last_most = lines[begin..end]
+                .iter()
                 .rfind(|x| x.chars().nth(index).unwrap() == most_common)
                 .unwrap();
             println!("last most (moving ending): {}", last_most);
@@ -80,7 +82,7 @@ pub fn search1(lines: &mut Vec<&str>) -> u32{
     return u32::from_str_radix(lines.get(begin).unwrap(), 2).unwrap();
 }
 
-pub fn search0(lines: &Vec<&str>) -> u32{
+pub fn search0(lines: &Vec<&str>) -> u32 {
     let mut begin = 0;
     let mut end = lines.len();
     let mut index = 0;
@@ -96,13 +98,15 @@ pub fn search0(lines: &Vec<&str>) -> u32{
         let most_common = middle.chars().nth(index).unwrap();
         println!("most common: {}", most_common);
         if most_common == '0' {
-            let first_most = lines[begin..end].iter()
+            let first_most = lines[begin..end]
+                .iter()
                 .find(|x| x.chars().nth(index).unwrap() == '1')
                 .unwrap();
             println!("first most (moving beggining): {}", first_most);
             begin = lines.iter().position(|x| x == first_most).unwrap();
         } else {
-            let last_most = lines[begin..end].iter()
+            let last_most = lines[begin..end]
+                .iter()
                 .rfind(|x| x.chars().nth(index).unwrap() == '0')
                 .unwrap();
             println!("last most (moving ending): {}", last_most);
@@ -127,33 +131,37 @@ const WIDTH: usize = 5;
 
 pub fn part_two(input: &str) -> Option<u32> {
     let nums = input
-    .lines()
-    .map(|l| u32::from_str_radix(l, 2).unwrap())
-    .collect::<Vec<_>>();
-    
+        .lines()
+        .map(|l| u32::from_str_radix(l, 2).unwrap())
+        .collect::<Vec<_>>();
+
     let oxy = (0..WIDTH)
-    .rev()
-    .scan(nums.clone(), |oxy, i| {
-        let one = oxy.iter().filter(|n| *n & 1 << i > 0).count() >= (oxy.len() + 1) / 2;
-        let (_, oxyy): (Vec<_>, Vec<_>) = oxy.to_owned().into_iter()
-            .partition(|n| (*n & 1 << i > 0) != one);
-        *oxy = oxyy;
-        oxy.first().copied()
-    })
-    .last()
-    .unwrap();
+        .rev()
+        .scan(nums.clone(), |oxy, i| {
+            let one = oxy.iter().filter(|n| *n & 1 << i > 0).count() >= (oxy.len() + 1) / 2;
+            let (_, oxyy): (Vec<_>, Vec<_>) = oxy
+                .to_owned()
+                .into_iter()
+                .partition(|n| (*n & 1 << i > 0) != one);
+            *oxy = oxyy;
+            oxy.first().copied()
+        })
+        .last()
+        .unwrap();
 
     let co2 = (0..WIDTH)
-    .rev()
-    .scan(nums, |co2, i| {
-        let one = co2.iter().filter(|n| *n & 1 << i > 0).count() >= (co2.len() + 1) / 2;
-        let (_, co2x): (Vec<_>, Vec<_>) = co2.to_owned().into_iter()
-            .partition(|n| (*n & 1 << i > 0) == one);
-        *co2 = co2x;
-        co2.first().copied()
-    })
-    .last()
-    .unwrap();
+        .rev()
+        .scan(nums, |co2, i| {
+            let one = co2.iter().filter(|n| *n & 1 << i > 0).count() >= (co2.len() + 1) / 2;
+            let (_, co2x): (Vec<_>, Vec<_>) = co2
+                .to_owned()
+                .into_iter()
+                .partition(|n| (*n & 1 << i > 0) == one);
+            *co2 = co2x;
+            co2.first().copied()
+        })
+        .last()
+        .unwrap();
 
     Some(oxy * co2)
 }

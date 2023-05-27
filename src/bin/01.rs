@@ -1,4 +1,4 @@
-use std::{collections::VecDeque};
+use std::collections::VecDeque;
 
 pub fn part_one(input: &str) -> Option<u32> {
     let lines = input.lines();
@@ -43,7 +43,7 @@ pub fn part_two(input: &str) -> Option<u32> {
             depth = line.parse::<u32>().unwrap();
             deque.push_back(depth);
             // print_deque(&deque);
-            
+
             let mut curr_sum = 0;
             for i in 0..3 {
                 curr_sum += deque.get(i).unwrap();
@@ -57,7 +57,7 @@ pub fn part_two(input: &str) -> Option<u32> {
                 // println!("- {}", deque.get(i).unwrap());
             }
             // println!("->{}", new_sum);
-            
+
             if new_sum > curr_sum {
                 decrease_cnt += 1;
                 // println!("Increase")

@@ -6,8 +6,8 @@ pub fn part_one(input: &str) -> Option<u32> {
         let direction = split.next().unwrap();
         let distance = split.next().unwrap().parse::<u32>().unwrap();
         match direction {
-            "forward" =>  x += distance,
-            "down" =>  y += distance,
+            "forward" => x += distance,
+            "down" => y += distance,
             "up" => y -= distance,
             _ => panic!("Unknown direction"),
         }
@@ -24,8 +24,11 @@ pub fn part_two(input: &str) -> Option<u32> {
         let direction = split.next().unwrap();
         let distance = split.next().unwrap().parse::<i32>().unwrap();
         match direction {
-            "forward" =>  { x += distance; y += distance * aim },
-            "down" =>  aim += distance,
+            "forward" => {
+                x += distance;
+                y += distance * aim
+            }
+            "down" => aim += distance,
             "up" => aim -= distance,
             _ => panic!("Unknown direction"),
         }
