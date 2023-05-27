@@ -55,7 +55,6 @@ pub fn search1(lines: &mut Vec<&str>) -> u32{
         for line in &lines[begin..end] {
             println!("{}", line);
         }
-        // lines[begin..end].sort_by(|x, y| x.chars().nth(index).unwrap().cmp(&y.chars().nth(index).unwrap()));
         let middle = lines.get(begin + ((end - begin) / 2)).unwrap();
         println!("mid: {}", middle);
 
@@ -116,67 +115,48 @@ pub fn search0(lines: &Vec<&str>) -> u32{
     return u32::from_str_radix(lines.get(begin).unwrap(), 2).unwrap();
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
-    let mut lines: Vec<&str> = input.lines().collect();
-    lines.sort();
-    let most = search1(&mut lines);
-    let least = search0(&lines);
-    return Some(most * least);
-}
-
-// let mut most_common: Vec<u32> = Vec::new();
-// let mut least_common: Vec<u32>  = Vec::new();
-// let mut most_common_lines: Vec<&str> = input.lines().collect();
-// let mut least_common_lines: Vec<&str> = input.lines().collect();
-// let mut most_common_n;
-// let mut least_common_n;
-// let mut index = 0;
-// while most_common_lines.len() != 1 && least_common_lines.len() != 1 {
-//     most_common_n = 0;
-//     least_common_n = 0;
-//     for line in most_common_lines {
-//         match line.chars().nth(index).unwrap() {
-//             '1' => most_common_n += 1,
-//             '0' => least_common_n -= 1,
-//             _ => unreachable!(),
-//         };
-//     }
-
-//     if most_common_n >= 0 {
-//         most_common.push(1);
-//         least_common.push(0);
-//     } else {
-//         most_common.push(1);
-//         least_common.push(0);
-//     }
-
-//     most_common_lines = input.lines()
-//         .filter(|x| x.chars().nth(index).unwrap().to_digit(10).unwrap()
-//                             == most_common[index])
-//         .collect();
-
-
-//     least_common_lines = input.lines()
-//         .filter(|x| x.chars().nth(index).unwrap().to_digit(10).unwrap()
-//                             == least_common[index])
-//         .collect();
-
-//     for line in &most_common_lines {
-//         println!("{}", line);
-//     }
-//     println!();
-
-//     for line in &least_common_lines {
-//         println!("{}", line);
-//     }
-//     println!();
-//     index += 1;
-//     if index == 5 {
-//         break;
-//     }    
+// pub fn part_two(input: &str) -> Option<u32> {
+//     let mut lines: Vec<&str> = input.lines().collect();
+//     lines.sort();
+//     let most = search1(&mut lines);
+//     let least = search0(&lines);
+//     return Some(most * least);
 // }
 
-// return Some(0);
+const WIDTH: usize = 5;
+
+pub fn part_two(input: &str) -> Option<u32> {
+    let nums = input
+    .lines()
+    .map(|l| u32::from_str_radix(l, 2).unwrap())
+    .collect::<Vec<_>>();
+    
+    let oxy = (0..WIDTH)
+    .rev()
+    .scan(nums.clone(), |oxy, i| {
+        let one = oxy.iter().filter(|n| *n & 1 << i > 0).count() >= (oxy.len() + 1) / 2;
+        let (_, oxyy): (Vec<_>, Vec<_>) = oxy.to_owned().into_iter()
+            .partition(|n| (*n & 1 << i > 0) != one);
+        *oxy = oxyy;
+        oxy.first().copied()
+    })
+    .last()
+    .unwrap();
+
+    let co2 = (0..WIDTH)
+    .rev()
+    .scan(nums, |co2, i| {
+        let one = co2.iter().filter(|n| *n & 1 << i > 0).count() >= (co2.len() + 1) / 2;
+        let (_, co2x): (Vec<_>, Vec<_>) = co2.to_owned().into_iter()
+            .partition(|n| (*n & 1 << i > 0) == one);
+        *co2 = co2x;
+        co2.first().copied()
+    })
+    .last()
+    .unwrap();
+
+    Some(oxy * co2)
+}
 
 fn main() {
     let input = &advent_of_code::read_file("inputs", 3);
