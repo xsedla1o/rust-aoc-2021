@@ -73,7 +73,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     let nums_in: Vec<u32> = get_input_nums(&mut lines);
     let mut boards: Vec<Vec<u32>> = get_boards(lines);
 
-    boards.sort_by_key(|x| nums_to_win(x, &nums_in));
+    boards.sort_by(|b, a| nums_to_win(a, &nums_in).cmp(&nums_to_win(b, &nums_in)));
 
     Some(board_score(&boards[0], &nums_in))
 }
