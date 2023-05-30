@@ -12,7 +12,7 @@ pub fn part_one(input: &str) -> Option<u32> {
             _ => panic!("Unknown direction"),
         }
     }
-    return Some(x * y);
+    Some(x * y)
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
@@ -33,7 +33,7 @@ pub fn part_two(input: &str) -> Option<u32> {
             _ => panic!("Unknown direction"),
         }
     }
-    return Some((x * y).try_into().unwrap());
+    Some((x * y).try_into().unwrap())
 }
 
 fn main() {

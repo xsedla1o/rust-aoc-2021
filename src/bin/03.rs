@@ -43,7 +43,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     println!("{}", gamma);
     println!("{}", epsilon);
 
-    return Some(gamma * epsilon);
+    Some(gamma * epsilon)
 }
 
 pub fn search1(lines: &mut Vec<&str>) -> u32 {
@@ -139,10 +139,8 @@ pub fn part_two(input: &str) -> Option<u32> {
         .rev()
         .scan(nums.clone(), |oxy, i| {
             let one = oxy.iter().filter(|n| *n & 1 << i > 0).count() >= (oxy.len() + 1) / 2;
-            let (_, oxyy): (Vec<_>, Vec<_>) = oxy
-                .to_owned()
-                .into_iter()
-                .partition(|n| (*n & 1 << i > 0) != one);
+            let (_, oxyy): (Vec<_>, Vec<_>) =
+                oxy.iter().copied().partition(|n| (*n & 1 << i > 0) != one);
             *oxy = oxyy;
             oxy.first().copied()
         })
@@ -153,10 +151,8 @@ pub fn part_two(input: &str) -> Option<u32> {
         .rev()
         .scan(nums, |co2, i| {
             let one = co2.iter().filter(|n| *n & 1 << i > 0).count() >= (co2.len() + 1) / 2;
-            let (_, co2x): (Vec<_>, Vec<_>) = co2
-                .to_owned()
-                .into_iter()
-                .partition(|n| (*n & 1 << i > 0) == one);
+            let (_, co2x): (Vec<_>, Vec<_>) =
+                co2.iter().copied().partition(|n| (*n & 1 << i > 0) == one);
             *co2 = co2x;
             co2.first().copied()
         })

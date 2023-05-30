@@ -8,7 +8,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     let nums_in: Vec<u32> = get_input_nums(&mut lines);
     let mut boards: Vec<Vec<u32>> = get_boards(lines);
 
-    boards.sort_by(|a, b| nums_to_win(a, &nums_in).cmp(&nums_to_win(b, &nums_in)));
+    boards.sort_by_key(|x| nums_to_win(x, &nums_in));
 
     Some(board_score(&boards[0], &nums_in))
 }
@@ -18,16 +18,15 @@ fn get_input_nums(lines: &mut Lines) -> Vec<u32> {
         .next()
         .as_mut()
         .unwrap()
-        .split(",")
+        .split(',')
         .map(|n| str::parse(n).unwrap())
         .collect()
 }
 
 fn get_boards(lines: Lines) -> Vec<Vec<u32>> {
     let nums: Vec<u32> = lines
-        .map(|x| x.split(" "))
-        .flatten()
-        .map(|n| str::parse(n))
+        .flat_map(|x| x.split(' '))
+        .map(str::parse)
         .filter(|res| !res.is_err())
         .map(|res| res.unwrap())
         .collect();
@@ -37,10 +36,10 @@ fn get_boards(lines: Lines) -> Vec<Vec<u32>> {
         .collect()
 }
 
-fn board_score(board: &Vec<u32>, nums_in: &Vec<u32>) -> u32 {
+fn board_score(board: &[u32], nums_in: &[u32]) -> u32 {
     let max_i = nums_to_win(board, nums_in);
     let unchecked_sum: u32 = board
-        .into_iter()
+        .iter()
         .filter(|x| !nums_in[0..=max_i].contains(x))
         .sum();
 
@@ -49,7 +48,7 @@ fn board_score(board: &Vec<u32>, nums_in: &Vec<u32>) -> u32 {
 
 fn win_by<'a, B: Iterator<Item = Row>, Row: IntoIterator<Item = &'a u32>>(
     board_view: B,
-    nums_in: &'a Vec<u32>,
+    nums_in: &'a [u32],
 ) -> usize {
     board_view // Either the rows or cols
         .map(|row: Row| {
@@ -62,12 +61,11 @@ fn win_by<'a, B: Iterator<Item = Row>, Row: IntoIterator<Item = &'a u32>>(
         .unwrap()
 }
 
-fn nums_to_win(board: &Vec<u32>, nums: &Vec<u32>) -> usize {
+fn nums_to_win(board: &[u32], nums: &[u32]) -> usize {
     let rows = board.chunks(SIZE);
-    let cols = (0..SIZE)
-        .map(|i| board.into_iter().skip(i).step_by(SIZE).take(SIZE));
+    let cols = (0..SIZE).map(|i| board.iter().skip(i).step_by(SIZE).take(SIZE));
 
-    min(win_by(rows, &nums), win_by(cols, &nums))
+    min(win_by(rows, nums), win_by(cols, nums))
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
@@ -75,7 +73,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     let nums_in: Vec<u32> = get_input_nums(&mut lines);
     let mut boards: Vec<Vec<u32>> = get_boards(lines);
 
-    boards.sort_by(|b, a| nums_to_win(a, &nums_in).cmp(&nums_to_win(b, &nums_in)));
+    boards.sort_by_key(|x| nums_to_win(x, &nums_in));
 
     Some(board_score(&boards[0], &nums_in))
 }

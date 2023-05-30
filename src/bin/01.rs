@@ -26,7 +26,7 @@ pub fn print_deque(deque: &VecDeque<u32>) {
     for item in deque.iter() {
         print!("{}, ", item);
     }
-    print!("\n");
+    println!();
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
